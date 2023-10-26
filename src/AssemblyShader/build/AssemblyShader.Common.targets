@@ -1,0 +1,66 @@
+﻿<Project>
+  <PropertyGroup>
+    <ShadedAssemblyKeyFile Condition="'$(ShadedAssemblyKeyFile)' == ''">$(MSBuildThisFileDirectory)shaded.snk</ShadedAssemblyKeyFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetsForTfmSpecificContentInPackage Condition="'$(IncludeShadedAssembliesInPackage)' == 'true'">$(TargetsForTfmSpecificContentInPackage);GetAssembliesToShade</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+  
+  <Target Name="GetAssembliesToShade"
+          DependsOnTargets="$(ResolveAssemblyReferencesDependsOn)"
+          Returns="@(_AssembliesToShade)">
+    <GetAssembliesToShade Debug="$(DebugShadeAssemblies)"
+                          FallbackTargetFrameworks="$(AssetTargetFallback)"
+                          IntermediateOutputPath="$(IntermediateOutputPath)"
+                          NuGetPackageRoot="$(NuGetPackageRoot)"
+                          PackageReferences="@(PackageReference)"
+                          PackageVersions="@(PackageVersion)"
+                          ProjectAssetsFile="$(ProjectAssetsFile)"
+                          ProjectDirectory="$(MSBuildProjectDirectory)"
+                          ProjectReferences="@(ProjectReference)"
+                          References="@(Reference);@(_ResolvedProjectReferencePaths)"
+                          ShadedAssemblyKeyFile="$(ShadedAssemblyKeyFile)"
+                          TargetFramework="$(TargetFramework)"
+                          TargetFrameworkMoniker="$(TargetFrameworkMoniker)">
+      <Output TaskParameter="AssembliesToShade" ItemName="_AssembliesToShade" />
+      <Output TaskParameter="AssembliesToShade" ItemName="FileWrites" />
+      <Output TaskParameter="ProjectReferencesToAdd" ItemName="_ProjectReferencesToAdd" />
+      <Output TaskParameter="ProjectReferencesToRemove" ItemName="_ProjectReferencesToRemove" />
+      <Output TaskParameter="ReferencesToAdd" ItemName="_ReferencesToAdd" />
+      <Output TaskParameter="ReferencesToRemove" ItemName="_ReferencesToRemove" />
+    </GetAssembliesToShade>
+
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="@(_ReferencesToRemove);@(_AssembliesToShade->'%(OriginalPath)')" />
+      <ReferenceCopyLocalPaths Include="@(_AssembliesToShade)" />
+
+      <UserRuntimeAssembly Include="@(_AssembliesToShade)" />
+      <ReferenceDependencyPaths Include="@(_AssembliesToShade)" />
+      
+      <Reference Remove="@(_ReferencesToRemove)" />
+      <Reference Include="@(_ReferencesToAdd)" />
+
+      <_ResolvedProjectReferencePaths Remove="@(_ProjectReferencesToRemove)" />
+      <_ResolvedProjectReferencePaths Include="@(_ProjectReferencesToAdd)" />
+      
+      <TfmSpecificPackageFile Include="@(_AssembliesToShade)"
+                              Condition="'$(IncludeShadedAssembliesInPackage)' == 'true'"
+                              BuildAction="None"
+                              Pack="true"
+                              PackageCopyToOutput="true"
+                              PackagePath="contentFiles\any\$(TargetFramework)\%(DestinationSubDirectory)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="ShadeAssemblies"
+          DependsOnTargets="$(ResolveAssemblyReferencesDependsOn);GetAssembliesToShade"
+          BeforeTargets="ResolveAssemblyReferences"
+          Inputs="@(_AssembliesToShade->'%(OriginalPath)');$(MSBuildAllProjects)"
+          Outputs="@(_AssembliesToShade)"
+          Condition="'$(DesignTimeBuild)' != 'true' And '$(ShadeAssemblies)' != 'false'">
+    <ShadeAssemblies AssembliesToShade="@(_AssembliesToShade)"
+                     Debug="$(DebugShadeAssemblies)"
+                     ShadedAssemblyKeyFile="$(ShadedAssemblyKeyFile)" />
+  </Target>
+</Project>

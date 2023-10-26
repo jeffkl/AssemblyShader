@@ -1,0 +1,33 @@
+<Project>
+  <PropertyGroup>
+    <Authors>jeffkl</Authors>
+    <Company>jeffkl</Company>
+    <Copyright>© All rights reserved.</Copyright>
+    <PackageProjectUrl>https://github.com/jeffkl/AssemblyShader</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>PackageIcon.png</PackageIcon>
+    <PackageIconPath>$(MSBuildThisFileDirectory)$(PackageIcon)</PackageIconPath>
+    <RepositoryUrl>https://github.com/jeffkl/AssemblyShader</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)src\GlobalSuppressions.cs" Link="%(Filename)%(Extension)" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json"
+                     Visible="false"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsPackable)' == 'true'">
+    <None Update="README.md"
+          Pack="true"
+          PackagePath="\" />
+    <None Include="$(PackageIconPath)"
+          Pack="true"
+          PackagePath="\"
+          Visible="false" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <Content Include="$(MSBuildThisFileDirectory)xunit.runner.json"
+             CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
