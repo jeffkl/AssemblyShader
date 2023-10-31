@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
-    <AssemblyOriginatorKeyFile>..\..\build\key.snk</AssemblyOriginatorKeyFile>
     <BuildOutputTargetFolder>build\</BuildOutputTargetFolder>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Description>An MSBuild extension that allows you to shade assembly dependencies.</Description>
@@ -11,7 +10,6 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeSymbols>true</IncludeSymbols>
     <NoWarn>$(NoWarn);NU5128</NoWarn>
-    <SignAssembly>true</SignAssembly>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
@@ -32,7 +30,7 @@
     <None Include="build\*" Pack="true" PackagePath="build\" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
-    <InternalsVisibleTo Include="AssemblyShader.Tasks.UnitTests" PublicKey="0024000004800000940000000602000000240000525341310004000001000100850ec43f083e4e9719133d45f40f98b0a27498d213ab3ab2170b8692ce01d7e3afde937070c5f13b3e9e76bed077cd74a4b755af65a8114ca30116d24b3eb45602c8a1fde34323d917946f59b010d2f8649c89f71060f617a88e3d72bf2b4700686396e4bf7a87674b4c62da26252381ca968bce2f963e519039b1a6d7f33fb7" />
+    <InternalsVisibleTo Include="AssemblyShader.UnitTests" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
