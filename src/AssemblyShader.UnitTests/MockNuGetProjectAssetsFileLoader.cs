@@ -6,15 +6,17 @@ using System.Collections.Generic;
 
 namespace AssemblyShader.UnitTests
 {
-    internal class MockNuGetProjectAssetsFileLoader : Dictionary<string, Dictionary<PackageIdentity, HashSet<PackageIdentity>>>, INuGetProjectAssetsFileLoader
+    internal sealed class MockNuGetProjectAssetsFileLoader : Dictionary<string, Dictionary<PackageIdentity, HashSet<PackageIdentity>>>, INuGetProjectAssetsFileLoader
     {
         public NuGetProjectAssetsFile Load(string projectDirectory, string projectAssetsFile)
         {
             NuGetProjectAssetsFile assetsFile = new NuGetProjectAssetsFile();
 
-            foreach (var item in this)
+            foreach (KeyValuePair<string, Dictionary<PackageIdentity, HashSet<PackageIdentity>>> item in this)
             {
-                foreach (var package in item.Value)
+                assetsFile[item.Key] = new NuGetProjectAssetsFileSection();
+
+                foreach (KeyValuePair<PackageIdentity, HashSet<PackageIdentity>> package in item.Value)
                 {
                     assetsFile[item.Key].Packages[package.Key] = package.Value;
                 }

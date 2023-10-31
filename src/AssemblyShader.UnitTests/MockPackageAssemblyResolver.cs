@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace AssemblyShader.UnitTests
 {
-    internal class MockPackageAssemblyResolver : Dictionary<PackageIdentity, List<PackageAssembly>>, IPackageAssemblyResolver
+    internal sealed class MockPackageAssemblyResolver : Dictionary<PackageIdentity, List<PackageAssembly>>, IPackageAssemblyResolver
     {
         public IEnumerable<PackageAssembly> GetNearest(PackageIdentity packageIdentity, string nuGetPackageRoot, string targetFramework, string[] fallbackTargetFrameworks)
         {

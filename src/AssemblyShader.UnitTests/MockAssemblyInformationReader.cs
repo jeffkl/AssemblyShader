@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace AssemblyShader.UnitTests
 {
-    internal class MockAssemblyInformationReader : Dictionary<string, List<AssemblyReference>>, IAssemblyInformationReader
+    internal sealed class MockAssemblyInformationReader : Dictionary<string, List<AssemblyReference>>, IAssemblyInformationReader
     {
         public MockAssemblyInformationReader()
             : base(StringComparer.OrdinalIgnoreCase)
@@ -18,7 +18,7 @@ namespace AssemblyShader.UnitTests
         {
             AssemblyInformation assemblyInformation = new AssemblyInformation();
 
-            foreach (var i in this)
+            foreach (KeyValuePair<string, List<AssemblyReference>> i in this)
             {
                 assemblyInformation.AssemblyReferences.Add(i.Key, i.Value);
             }

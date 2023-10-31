@@ -9,11 +9,18 @@ using System.Linq;
 
 namespace AssemblyShader
 {
-    internal sealed class InternalsVisibleToCache
+    internal sealed class InternalsVisibleToReader : IInternalsVisibleToReader
     {
         private static readonly ConcurrentDictionary<string, Lazy<string>> Cache = new ConcurrentDictionary<string, Lazy<string>>(StringComparer.OrdinalIgnoreCase);
 
-        public static string GetInternalsVisibleTo(string path) => Cache.GetOrAdd(path, new Lazy<string>(() =>
+        public string Read(string path)
+        {
+            Lazy<string> result = Cache.GetOrAdd(path, new Lazy<string>(() => GetInternalsVisibleToAttributeValue(path)));
+
+            return result.Value;
+        }
+
+        private static string GetInternalsVisibleToAttributeValue(string path)
         {
             using AssemblyDefinition assemblyDefinition = AssemblyDefinition.ReadAssembly(path);
 
@@ -23,6 +30,6 @@ namespace AssemblyShader
             }
 
             return assemblyDefinition.Name.Name;
-        })).Value;
+        }
     }
 }

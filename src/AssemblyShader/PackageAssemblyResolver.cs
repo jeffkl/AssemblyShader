@@ -13,13 +13,13 @@ namespace AssemblyShader
 {
     internal sealed class PackageAssemblyResolver : IPackageAssemblyResolver
     {
-        public IEnumerable<PackageAssembly> GetNearest(PackageIdentity packageIdentity, string nuGetPackageRoot, string targetFramework, string[] fallbackTargetFrameworks)
+        public IEnumerable<PackageAssembly>? GetNearest(PackageIdentity packageIdentity, string nuGetPackageRoot, string targetFramework, string[] fallbackTargetFrameworks)
         {
             string path = Path.Combine(nuGetPackageRoot, packageIdentity.Id.ToLower(), packageIdentity.Version.ToLower(), "lib");
 
             if (!Directory.Exists(path))
             {
-                yield break;
+                return null;
             }
 
             IEnumerable<string> targetFrameworksToCheck = new List<string> { targetFramework }.Concat(fallbackTargetFrameworks == null ? Array.Empty<string>() : fallbackTargetFrameworks);
@@ -43,16 +43,10 @@ namespace AssemblyShader
 
             if (directory is null)
             {
-                yield break;
+                return null;
             }
 
-            foreach (PackageAssembly? item in directory.EnumerateFiles("*.dll", SearchOption.AllDirectories).Select(i => GetAssemblyName(directory, i)))
-            {
-                if (item.HasValue)
-                {
-                    yield return item.Value;
-                }
-            }
+            return directory.EnumerateFiles("*.dll", SearchOption.AllDirectories).Select(i => GetAssemblyName(directory, i)).Where(i => i.HasValue).Select(i => i!.Value);
 
             PackageAssembly? GetAssemblyName(DirectoryInfo rootDirectory, FileInfo file)
             {

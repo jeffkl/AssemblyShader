@@ -24,6 +24,7 @@ namespace AssemblyShader.Tasks
 
         private readonly IAssemblyInformationReader _assemblyInformationReader;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly IInternalsVisibleToReader _internalsVisibleToReader;
         private readonly INuGetProjectAssetsFileLoader _nuGetProjectAssetsFileLoader;
         private readonly IPackageAssemblyResolver _packageAssemblyResolver;
 
@@ -31,16 +32,17 @@ namespace AssemblyShader.Tasks
         /// Initializes a new instance of the <see cref="GetAssembliesToShade" /> class.
         /// </summary>
         public GetAssembliesToShade()
-            : this(new NuGetProjectAssetsFileLoader(), new PackageAssemblyResolver(), new AssemblyInformationReader())
+            : this(new NuGetProjectAssetsFileLoader(), new PackageAssemblyResolver(), new AssemblyInformationReader(), new InternalsVisibleToReader())
         {
         }
 
-        internal GetAssembliesToShade(INuGetProjectAssetsFileLoader nuGetProjectAssetsFileLoader, IPackageAssemblyResolver packageAssemblyResolver, IAssemblyInformationReader assemblyInformationReader)
+        internal GetAssembliesToShade(INuGetProjectAssetsFileLoader nuGetProjectAssetsFileLoader, IPackageAssemblyResolver packageAssemblyResolver, IAssemblyInformationReader assemblyInformationReader, IInternalsVisibleToReader internalsVisibleToReader)
             : base(Strings.ResourceManager)
         {
             _nuGetProjectAssetsFileLoader = nuGetProjectAssetsFileLoader ?? throw new ArgumentNullException(nameof(nuGetProjectAssetsFileLoader));
             _packageAssemblyResolver = packageAssemblyResolver ?? throw new ArgumentNullException(nameof(packageAssemblyResolver));
             _assemblyInformationReader = assemblyInformationReader ?? throw new ArgumentNullException(nameof(assemblyInformationReader));
+            _internalsVisibleToReader = internalsVisibleToReader ?? throw new ArgumentNullException(nameof(internalsVisibleToReader));
         }
 
         /// <summary>
@@ -226,8 +228,6 @@ namespace AssemblyShader.Tasks
                         continue;
                     }
 
-                    using AssemblyDefinition assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyReference.FullPath);
-
                     AssemblyToRename assemblyToRename = new AssemblyToRename(assemblyReference.FullPath, assemblyReference.Name)
                     {
                         ShadedAssemblyName = new AssemblyNameDefinition(assemblyReference.Name.Name, assemblyReference.Name.Version)
@@ -238,7 +238,7 @@ namespace AssemblyShader.Tasks
                         ShadedPath = Path.GetFullPath(Path.Combine(IntermediateOutputPath, "ShadedAssemblies", Path.GetFileName(assemblyReference.FullPath))),
                     };
 
-                    assemblyToRename.InternalsVisibleTo = InternalsVisibleToCache.GetInternalsVisibleTo(assemblyReference.FullPath);
+                    assemblyToRename.InternalsVisibleTo = _internalsVisibleToReader.Read(assemblyReference.FullPath);
                     assemblyToRename.ShadedInternalsVisibleTo = $"{assemblyToRename.ShadedAssemblyName.Name}, PublicKey={strongNameKeyPair.PublicKeyString}";
 
                     assembliesToRename.Add(assemblyToRename);
@@ -264,7 +264,7 @@ namespace AssemblyShader.Tasks
                             continue;
                         }
 
-                        var assemblyName = AssemblyNameCache.GetAssemblyName(assemblyReference.FullPath);
+                        AssemblyName assemblyName = AssemblyNameCache.GetAssemblyName(assemblyReference.FullPath);
 
                         if (!assembliesToUpdate.Add(assemblyName.FullName))
                         {
@@ -281,7 +281,7 @@ namespace AssemblyShader.Tasks
                             ShadedPath = Path.GetFullPath(Path.Combine(IntermediateOutputPath, "ShadedAssemblies", Path.GetFileName(assemblyReference.FullPath))),
                         };
 
-                        assemblyToRename.InternalsVisibleTo = InternalsVisibleToCache.GetInternalsVisibleTo(assemblyReference.FullPath);
+                        assemblyToRename.InternalsVisibleTo = _internalsVisibleToReader.Read(assemblyReference.FullPath);
                         assemblyToRename.ShadedInternalsVisibleTo = $"{assemblyToRename.ShadedAssemblyName.Name}, PublicKey={strongNameKeyPair.PublicKeyString}";
 
                         assembliesWithInternalsVisibleTo.Add(assemblyToRename);
@@ -289,7 +289,7 @@ namespace AssemblyShader.Tasks
                 }
             }
 
-            foreach (var item in assembliesWithInternalsVisibleTo)
+            foreach (AssemblyToRename item in assembliesWithInternalsVisibleTo)
             {
                 assembliesToRename.Add(item);
             }
@@ -305,7 +305,7 @@ namespace AssemblyShader.Tasks
             {
                 if (packageToShade.Id != null)
                 {
-                    IEnumerable<PackageAssembly> packageAssemblies = _packageAssemblyResolver.GetNearest(packageToShade, NuGetPackageRoot, TargetFramework, FallbackTargetFrameworks);
+                    IEnumerable<PackageAssembly>? packageAssemblies = _packageAssemblyResolver.GetNearest(packageToShade, NuGetPackageRoot, TargetFramework, FallbackTargetFrameworks);
 
                     if (packageAssemblies == null)
                     {
@@ -351,7 +351,7 @@ namespace AssemblyShader.Tasks
                             PublicKey = strongNameKeyPair.PublicKey,
                         };
 
-                        assemblyToRename.InternalsVisibleTo = InternalsVisibleToCache.GetInternalsVisibleTo(packageAssembly.Path);
+                        assemblyToRename.InternalsVisibleTo = _internalsVisibleToReader.Read(packageAssembly.Path);
                         assemblyToRename.ShadedInternalsVisibleTo = $"{assemblyToRename.ShadedAssemblyName.Name}, PublicKey={strongNameKeyPair.PublicKeyString}";
                         assemblyToRename.ShadedPath = Path.GetFullPath(Path.Combine(IntermediateOutputPath, "ShadedAssemblies", packageAssembly.Subdirectory ?? string.Empty, $"{assemblyName}.dll"));
 
@@ -394,7 +394,10 @@ namespace AssemblyShader.Tasks
                         {
                             PackageIdentity packageToShade = dependencies.FirstOrDefault(i => string.Equals(i.Id, shadeDependency, StringComparison.OrdinalIgnoreCase));
 
-                            packagesToShade.Add(packageToShade);
+                            if (packageToShade.Id is not null)
+                            {
+                                packagesToShade.Add(packageToShade);
+                            }
                         }
                     }
                 }
@@ -433,7 +436,7 @@ namespace AssemblyShader.Tasks
                     {
                         if (shadeDependencies == "*")
                         {
-                            foreach (var item in dependencies)
+                            foreach (PackageIdentity item in dependencies)
                             {
                                 packagesToShade.Add(item);
                             }
@@ -530,45 +533,43 @@ namespace AssemblyShader.Tasks
 
                 assemblyToShade.SetMetadata(ItemMetadataNames.DestinationSubdirectory, string.IsNullOrWhiteSpace(assemblyToRename.DestinationSubdirectory) ? string.Empty : assemblyToRename.DestinationSubdirectory);
 
-                if (!existingReferenceItems.TryGetValue(assemblyToRename.AssemblyName.FullName, out List<ITaskItem>? existingReferenceItemsForAssembly))
-                {
-                    continue;
-                }
-
                 bool isProjectReference = false;
 
-                foreach (ITaskItem existingReferenceItemForAssembly in existingReferenceItemsForAssembly)
+                if (existingReferenceItems.TryGetValue(assemblyToRename.AssemblyName.FullName, out List<ITaskItem>? existingReferenceItemsForAssembly))
                 {
-                    if (string.Equals(existingReferenceItemForAssembly.GetMetadata("ReferenceSourceTarget"), "ProjectReference", StringComparison.OrdinalIgnoreCase))
+                    foreach (ITaskItem existingReferenceItemForAssembly in existingReferenceItemsForAssembly)
                     {
-                        isProjectReference = true;
+                        if (string.Equals(existingReferenceItemForAssembly.GetMetadata("ReferenceSourceTarget"), "ProjectReference", StringComparison.OrdinalIgnoreCase))
+                        {
+                            isProjectReference = true;
 
-                        TaskItem projectReferenceToRemove = new TaskItem(existingReferenceItemForAssembly.ItemSpec);
+                            TaskItem projectReferenceToRemove = new TaskItem(existingReferenceItemForAssembly.ItemSpec);
 
-                        projectReferencesToRemove.Add(projectReferenceToRemove);
+                            projectReferencesToRemove.Add(projectReferenceToRemove);
 
-                        continue;
+                            continue;
+                        }
+
+                        TaskItem referenceToRemove = new TaskItem(existingReferenceItemForAssembly.ItemSpec);
+
+                        referencesToRemove.Add(referenceToRemove);
                     }
 
-                    TaskItem referenceToRemove = new TaskItem(existingReferenceItemForAssembly.ItemSpec);
+                    if (isProjectReference)
+                    {
+                        TaskItem projectReferenceToAdd = new TaskItem(assemblyToRename.ShadedPath, existingReferenceItemsForAssembly.First().CloneCustomMetadata());
 
-                    referencesToRemove.Add(referenceToRemove);
-                }
+                        projectReferencesToAdd.Add(projectReferenceToAdd);
+                    }
+                    else
+                    {
+                        TaskItem referenceToAdd = new TaskItem(assemblyToRename.ShadedPath, existingReferenceItemsForAssembly.First().CloneCustomMetadata());
 
-                if (isProjectReference)
-                {
-                    TaskItem projectReferenceToAdd = new TaskItem(assemblyToRename.ShadedPath, existingReferenceItemsForAssembly.First().CloneCustomMetadata());
+                        referenceToAdd.SetMetadata(ItemMetadataNames.HintPath, assemblyToRename.ShadedPath);
+                        referenceToAdd.SetMetadata(ItemMetadataNames.OriginalPath, assemblyToRename.FullPath);
 
-                    projectReferencesToAdd.Add(projectReferenceToAdd);
-                }
-                else
-                {
-                    TaskItem referenceToAdd = new TaskItem(assemblyToRename.ShadedPath, existingReferenceItemsForAssembly.First().CloneCustomMetadata());
-
-                    referenceToAdd.SetMetadata(ItemMetadataNames.HintPath, assemblyToRename.ShadedPath);
-                    referenceToAdd.SetMetadata(ItemMetadataNames.OriginalPath, assemblyToRename.FullPath);
-
-                    referencesToAdd.Add(referenceToAdd);
+                        referencesToAdd.Add(referenceToAdd);
+                    }
                 }
 
                 assembliesToShade.Add(assemblyToShade);

@@ -19,6 +19,6 @@ namespace AssemblyShader
         /// <param name="targetFramework">The target framework of the current project.</param>
         /// <param name="fallbackTargetFrameworks">An array of fallback target frameworks of the current project.</param>
         /// <returns>An <see cref="IEnumerable{T}" /> containing the resolved assemblies from the package for the target framework.</returns>
-        IEnumerable<PackageAssembly> GetNearest(PackageIdentity packageIdentity, string nuGetPackageRoot, string targetFramework, string[] fallbackTargetFrameworks);
+        IEnumerable<PackageAssembly>? GetNearest(PackageIdentity packageIdentity, string nuGetPackageRoot, string targetFramework, string[] fallbackTargetFrameworks);
     }
 }
