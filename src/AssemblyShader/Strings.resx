@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Error_EclipsedPackageVersion" xml:space="preserve">
+    <value>The package "{0}/{1}" cannot be shaded because its version is eclipsed by an explicit package reference with a higher version "{2}".  You must add the following item to your project: &lt;PackageDownload Include="{0}" Version="[{1}]" /&gt;</value>
+  </data>
   <data name="Error_ProjectAssetsFileNotFound" xml:space="preserve">
     <value>The specified NuGet project assets file "{0}" does not exist.  Ensure a NuGet restore completed successfully.</value>
   </data>

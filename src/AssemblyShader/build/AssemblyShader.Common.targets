@@ -14,6 +14,7 @@
                           FallbackTargetFrameworks="$(AssetTargetFallback)"
                           IntermediateOutputPath="$(IntermediateOutputPath)"
                           NuGetPackageRoot="$(NuGetPackageRoot)"
+                          PackageDownloads="@(PackageDownload)"
                           PackageReferences="@(PackageReference)"
                           PackageVersions="@(PackageVersion)"
                           ProjectAssetsFile="$(ProjectAssetsFile)"

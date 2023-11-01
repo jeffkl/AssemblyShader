@@ -39,7 +39,7 @@ namespace AssemblyShader {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AssemblyShader.Tasks.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AssemblyShader.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,15 @@ namespace AssemblyShader {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The package &quot;{0}/{1}&quot; cannot be shaded because its version is eclipsed by an explicit package reference with a higher version &quot;{2}&quot;.  You must add the following item to your project: &lt;PackageDownload Include=&quot;{0}&quot; Version=&quot;[{1}]&quot; /&gt;.
+        /// </summary>
+        internal static string Error_EclipsedPackageVersion {
+            get {
+                return ResourceManager.GetString("Error_EclipsedPackageVersion", resourceCulture);
             }
         }
         

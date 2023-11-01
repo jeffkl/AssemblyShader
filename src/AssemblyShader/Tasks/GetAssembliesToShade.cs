@@ -5,6 +5,7 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Mono.Cecil;
+using NuGet.Versioning;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -72,6 +73,11 @@ namespace AssemblyShader.Tasks
         /// </summary>
         [Required]
         public string NuGetPackageRoot { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets an array of <see cref="ITaskItem" /> objects representing the PackageDownload items.
+        /// </summary>
+        public ITaskItem[] PackageDownloads { get; set; } = Array.Empty<ITaskItem>();
 
         /// <summary>
         /// Gets or sets an array of <see cref="ITaskItem" /> objects representing the NuGet package references.
@@ -185,6 +191,28 @@ namespace AssemblyShader.Tasks
             if (!packagesToShade.Any() || _cancellationTokenSource.IsCancellationRequested)
             {
                 return !Log.HasLoggedErrors;
+            }
+
+            HashSet<PackageIdentity> packageDownloads = GetPackageDownloads();
+
+            foreach (PackageIdentity packageToShade in packagesToShade.TakeWhile(i => !_cancellationTokenSource.IsCancellationRequested))
+            {
+                if (packageDownloads.Contains(packageToShade))
+                {
+                    continue;
+                }
+
+                KeyValuePair<PackageIdentity, HashSet<PackageIdentity>> eclipsedPackage = nugetProjectAssetsFileSection.Packages.FirstOrDefault(i => i.Key.Id.Equals(packageToShade.Id, StringComparison.OrdinalIgnoreCase));
+
+                if (!string.Equals(eclipsedPackage.Key.Version, packageToShade.Version))
+                {
+                    Log.LogErrorFromResources(nameof(Strings.Error_EclipsedPackageVersion), packageToShade.Id, packageToShade.Version, eclipsedPackage.Key.Version);
+                }
+            }
+
+            if (Log.HasLoggedErrors || _cancellationTokenSource.IsCancellationRequested)
+            {
+                return _cancellationTokenSource.IsCancellationRequested;
             }
 
             List<AssemblyToRename> assembliesToRename = GetAssembliesToShadeForPackages(strongNameKeyPair, packagesToShade, nugetProjectAssetsFile);
@@ -361,6 +389,28 @@ namespace AssemblyShader.Tasks
             }
 
             return assembliesToRename;
+        }
+
+        private HashSet<PackageIdentity> GetPackageDownloads()
+        {
+            HashSet<PackageIdentity> packageDownloads = new HashSet<PackageIdentity>();
+
+            foreach (ITaskItem item in PackageDownloads)
+            {
+                string id = item.ItemSpec;
+                string version = item.GetMetadata("Version");
+
+                if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(version))
+                {
+                    continue;
+                }
+
+                PackageIdentity package = new PackageIdentity(id, version.Trim().Trim('[', ']'));
+
+                packageDownloads.Add(package);
+            }
+
+            return packageDownloads;
         }
 
         private HashSet<PackageIdentity> GetPackagesToShade(NuGetProjectAssetsFile assetsFile, NuGetProjectAssetsFileSection assetsFileSection)
