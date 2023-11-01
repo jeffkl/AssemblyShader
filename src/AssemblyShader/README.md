@@ -38,11 +38,11 @@ As the project is built, the package shader logic finds the assemblies in `Packa
 
 Now the output folder has both `PackageZ.dll` which is version `2.0.0.0` and `PackageZ.1.0.0.0.dll`.
 
-**TODO: IMAGE OF PACKAGEZ SHADED**
+![image](https://github.com/jeffkl/AssemblyShader/assets/17556515/f71cb349-ee1b-4426-880e-50eb7d28db77)
 
 `PackageA.dll` was also updated to reference `PackageZ.1.0.0.0.dll` instead of `PackageZ.dll`.
 
-**TODO: IMAGE OF UPDATED REFERENCES**
+![image](https://github.com/jeffkl/AssemblyShader/assets/17556515/f9856984-a31e-4689-8139-9afbf75391f8)
 
 ## Shading Entire Packages
 If you wish to shade all of the assemblies in a particular package and its transitive dependencies, you can use the `Shade` property:
@@ -51,6 +51,8 @@ If you wish to shade all of the assemblies in a particular package and its trans
   <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" Shade="true" />
 </ItemGroup>
 ```
+![image](https://github.com/jeffkl/AssemblyShader/assets/17556515/0451827a-a20e-41ca-abd1-bd2e325523fe)
+![image](https://github.com/jeffkl/AssemblyShader/assets/17556515/9dfe6113-b7b3-456f-bdc3-16ac0b4a1f88)
 
 ## Shading Assemblies Eclipsed by Explicit Package References
 When you have specified a newer version of a transitive dependency in your project, NuGet will eclipse this transitive version and as a performance optimization not download it.  This means that the assemblies won't be available in the global packages folder to shade.  To workaround this issue, the assembly shader will log an error indicating that you need to tell NuGet to download the dependency with a `<PackageDownload />` item.
