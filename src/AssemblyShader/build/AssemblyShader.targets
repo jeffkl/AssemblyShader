@@ -1,0 +1,14 @@
+﻿<Project>
+  <PropertyGroup Condition="'$(ShadingTaskAssemblyPath)' == ''">
+    <ShadingTaskAssemblyPath Condition="'$(MSBuildRuntimeType)' == 'Full'">$(MSBuildThisFileDirectory)net472\PackageShading.Tasks.dll</ShadingTaskAssemblyPath>
+    <ShadingTaskAssemblyPath Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)netstandard2.0\PackageShading.Tasks.dll</ShadingTaskAssemblyPath>
+  </PropertyGroup>
+  
+  <UsingTask TaskName="GetAssembliesToShade"
+             AssemblyFile="$(ShadingTaskAssemblyPath)" />
+  
+  <UsingTask TaskName="ShadeAssemblies"
+             AssemblyFile="$(ShadingTaskAssemblyPath)" />
+
+  <Import Project="$([MSBuild]::ValueOrDefault('$(ShadingTaskCommonTargets)', '$(MSBuildThisFileDirectory)PackageShading.Tasks.Common.targets'))" />
+</Project>
