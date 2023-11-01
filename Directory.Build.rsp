@@ -1,0 +1,5 @@
+/Restore
+/ConsoleLoggerParameters:Verbosity=Minimal;Summary;ForceNoAlign
+/TerminalLogger
+/MaxCPUCount
+/Interactive
