@@ -19,6 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyShader.UnitTests", "src\AssemblyShader.UnitTests\AssemblyShader.UnitTests.csproj", "{987AA0D8-2F97-4306-8907-08C70F003C97}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{891E0B0B-602F-45D7-8D76-13D78FDA43E1}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\CI.yml = .github\workflows\CI.yml
+		.github\dependabot.yml = .github\dependabot.yml
+		.github\workflows\Official.yml = .github\workflows\Official.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

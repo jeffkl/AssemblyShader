@@ -27,10 +27,10 @@ jobs:
     - name: Install .NET SDKs
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: | 
-          3.x
-          6.x
+        include-prerelease: true
+        dotnet-version: |
           7.x
+          8.x
 
     - name: Build Solution
       run: dotnet build "/Property:Platform=${{ env.BuildPlatform }};Configuration=${{ env.BuildConfiguration }}" "/BinaryLogger:${{ env.ArtifactsDirectoryName }}\build.binlog"
