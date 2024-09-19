@@ -9,7 +9,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Shouldly" />
     <PackageReference Include="MSBuild.ProjectCreation" />
-    <PackageReference Include="NuGet.Frameworks" VersionOverride="6.10.1" />
+    <PackageReference Include="NuGet.Frameworks" VersionOverride="6.11.0" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="System.Text.Json" />
