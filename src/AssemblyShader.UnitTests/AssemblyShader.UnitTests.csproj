@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net472;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net472;net8.0;net9.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);SA0001;SA1600</NoWarn>
   </PropertyGroup>
@@ -13,6 +13,8 @@
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="System.Text.Json" />
+
+    <PackageReference Include="Microsoft.IO.Redist" VersionOverride="6.0.1" Condition="'$(TargetFramework)' == 'net472'"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AssemblyShader\AssemblyShader.csproj" />
