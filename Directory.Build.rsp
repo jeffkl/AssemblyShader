@@ -1,5 +1,5 @@
 /Restore
 /ConsoleLoggerParameters:Verbosity=Minimal;Summary;ForceNoAlign
-/TerminalLogger
+/TerminalLogger:off
 /MaxCPUCount
 /Interactive

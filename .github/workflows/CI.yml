@@ -45,13 +45,19 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install .NET SDKs
+    - name: Install .NET SDK 8.x
       uses: actions/setup-dotnet@v4
       with:
-        include-prerelease: true
         dotnet-version: |
-          7.x
           8.x
+
+    - name: Install .NET SDK 9.x
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          9.x
+        dotnet-quality: preview
+
 
     - name: Build Solution
       run: dotnet build "/Property:Platform=${{ env.BuildPlatform }};Configuration=${{ env.BuildConfiguration }}" "/BinaryLogger:${{ env.ArtifactsDirectoryName }}/build.binlog"
@@ -60,11 +66,11 @@ jobs:
       if: ${{ matrix.name == 'Windows' }}
       run: dotnet test ${{ env.CommonTestArguments }} ${{ matrix.TestArguments}} --framework net472 "/Property:Platform=${{ env.BuildPlatform }};Configuration=${{ env.BuildConfiguration }}" "/BinaryLogger:${{ env.ArtifactsDirectoryName }}/test-net472.binlog"
 
-    - name: Run Unit Tests (.NET 7)
-      run: dotnet test ${{ env.CommonTestArguments }} ${{ matrix.TestArguments}} --framework net7.0 "/Property:Platform=${{ env.BuildPlatform }};Configuration=${{ env.BuildConfiguration }}" "/BinaryLogger:${{ env.ArtifactsDirectoryName }}/test-net7.0.binlog"
-
     - name: Run Unit Tests (.NET 8)
       run: dotnet test ${{ env.CommonTestArguments }} ${{ matrix.TestArguments}} --framework net8.0 "/Property:Platform=${{ env.BuildPlatform }};Configuration=${{ env.BuildConfiguration }}" "/BinaryLogger:${{ env.ArtifactsDirectoryName }}/test-net8.0.binlog"
+
+    - name: Run Unit Tests (.NET 9)
+      run: dotnet test ${{ env.CommonTestArguments }} ${{ matrix.TestArguments}} --framework net9.0 "/Property:Platform=${{ env.BuildPlatform }};Configuration=${{ env.BuildConfiguration }}" "/BinaryLogger:${{ env.ArtifactsDirectoryName }}/test-net9.0.binlog"
       
     - name: Code Coverage Report
       if: ${{ matrix.name == 'Linux' }}

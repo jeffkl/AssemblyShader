@@ -15,7 +15,7 @@ namespace AssemblyShader
     internal readonly record struct PackageIdentity : IEqualityComparer<PackageIdentity>, IEquatable<PackageIdentity>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PackageIdentity" /> class with the specified ID and version.
+        /// Initializes a new instance of the <see cref="PackageIdentity" /> struct with the specified ID and version.
         /// </summary>
         /// <param name="id">The ID of the package.</param>
         /// <param name="version">The version of the package.</param>

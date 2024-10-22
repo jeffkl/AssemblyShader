@@ -24,13 +24,18 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install .NET SDKs
+    - name: Install .NET SDK 8.x
       uses: actions/setup-dotnet@v4
       with:
-        include-prerelease: true
         dotnet-version: |
-          7.x
           8.x
+    
+    - name: Install .NET SDK 9.x
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          9.x
+        dotnet-quality: preview
 
     - name: Build Solution
       run: dotnet build "/Property:Platform=${{ env.BuildPlatform }};Configuration=${{ env.BuildConfiguration }}" "/BinaryLogger:${{ env.ArtifactsDirectoryName }}\build.binlog"
