@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <MicrosoftBuildPackageVersion>17.11.4</MicrosoftBuildPackageVersion>
-    <NuGetPackageVersion>6.11.1</NuGetPackageVersion>
+    <NuGetPackageVersion>6.12.1</NuGetPackageVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
