@@ -26,7 +26,7 @@
     <PackageReference Include="NuGet.Versioning" />
     <PackageReference Include="System.Text.Json" Condition="'$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'netstandard2.0'" />
 
-    <PackageReference Include="Microsoft.IO.Redist" VersionOverride="6.0.1" Condition="'$(TargetFramework)' == 'net472'"/>
+    <PackageReference Include="Microsoft.IO.Redist" VersionOverride="6.1.0" Condition="'$(TargetFramework)' == 'net472'"/>
   </ItemGroup>
   <ItemGroup>
     <None Include="build\*" Pack="true" PackagePath="build\" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
