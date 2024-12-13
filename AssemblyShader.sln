@@ -13,8 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		README.md = README.md
 		stylecop.json = stylecop.json
+		build\UnitTest.runsettings = build\UnitTest.runsettings
 		version.json = version.json
-		xunit.runner.json = xunit.runner.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyShader.UnitTests", "src\AssemblyShader.UnitTests\AssemblyShader.UnitTests.csproj", "{987AA0D8-2F97-4306-8907-08C70F003C97}"
