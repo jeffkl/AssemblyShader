@@ -1,4 +1,4 @@
-﻿# .NET Assembly Shader
+# .NET Assembly Shader
 A .NET assembly shader for allowing .NET apps to load multiple versions of the same assembly.
 
 ## Shading Transitive Dependencies
@@ -27,7 +27,7 @@ Assembly shading provides an escape hatch for the above example.  It renames the
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="PackageShading.Tasks" Version="1.0.0" PrivateAssets="All" />
+  <PackageReference Include="AssemblyShader" Version="1.0.0" PrivateAssets="All" />
 
   <PackageReference Include="PackageA" Version="1.0.0" ShadeDependencies="PackageZ" />
   <PackageReference Include="PackageB" Version="1.0.0" />
@@ -61,7 +61,7 @@ In the below example since `PackageZ` version `2.0.0` is declared explicitly, th
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="PackageShading.Tasks" Version="1.0.0" PrivateAssets="All" />
+  <PackageReference Include="AssemblyShader" Version="1.0.0" PrivateAssets="All" />
 
   <PackageReference Include="PackageA" Version="1.0.0" ShadeDependencies="PackageZ" />
   <PackageReference Include="PackageB" Version="1.0.0" />
@@ -72,7 +72,7 @@ In the below example since `PackageZ` version `2.0.0` is declared explicitly, th
 You will need to specify a `<PackageDownload />` item to indicate to NuGet to still make it available:
 ```xml
 <ItemGroup>
-  <PackageReference Include="PackageShading.Tasks" Version="1.0.0" PrivateAssets="All" />
+  <PackageReference Include="AssemblyShader" Version="1.0.0" PrivateAssets="All" />
 
   <PackageReference Include="PackageA" Version="1.0.0" ShadeDependencies="PackageZ" />
   <PackageReference Include="PackageB" Version="1.0.0" />
