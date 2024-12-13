@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <MaxCpuCount>0</MaxCpuCount>
+    <TreatNoTestsAsError>true</TreatNoTestsAsError>
+  </RunConfiguration>
+
+  <LoggerRunSettings>
+    <Loggers>
+      <Logger friendlyName="console" enabled="true">
+        <Configuration>
+          <Verbosity>quiet</Verbosity>
+        </Configuration>
+      </Logger>
+    </Loggers>
+  </LoggerRunSettings>
+
+  <xUnit>
+    <AppDomain>denied</AppDomain>
+    <LongRunningTestSeconds>90</LongRunningTestSeconds>
+    <MaxParallelThreads>0</MaxParallelThreads>
+    <ParallelizeAssembly>true</ParallelizeAssembly>
+    <ParallelizeTestCollections>true</ParallelizeTestCollections>
+    <ReporterSwitch>quiet</ReporterSwitch>
+    <ShadowCopy>false</ShadowCopy>
+  </xUnit>
+</RunSettings>

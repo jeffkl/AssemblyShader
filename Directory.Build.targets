@@ -6,7 +6,7 @@
     <PackageProjectUrl>https://github.com/jeffkl/AssemblyShader</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>PackageIcon.png</PackageIcon>
-    <PackageIconPath>$(MSBuildThisFileDirectory)$(PackageIcon)</PackageIconPath>
+    <PackageIconPath>$(MSBuildThisFileDirectory)build\$(PackageIcon)</PackageIconPath>
     <RepositoryUrl>https://github.com/jeffkl/AssemblyShader</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
@@ -14,6 +14,8 @@
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)build\key.snk</AssemblyOriginatorKeyFile>
+
+    <RunSettingsFilePath>$(MSBuildThisFileDirectory)build\UnitTest.runsettings</RunSettingsFilePath>
   </PropertyGroup>
   
   <ItemGroup>
@@ -32,9 +34,5 @@
           Pack="true"
           PackagePath="\"
           Visible="false" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
-    <Content Include="$(MSBuildThisFileDirectory)xunit.runner.json"
-             CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

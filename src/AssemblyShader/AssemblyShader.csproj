@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
+    <ArtifactsPath>..\..\artifacts\$(MSBuildProjectName)</ArtifactsPath>
     <BuildOutputTargetFolder>build\</BuildOutputTargetFolder>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Description>An MSBuild extension that allows you to shade assembly dependencies.</Description>
@@ -19,23 +20,19 @@
     </PackageReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Utilities.Core" ExcludeAssets="Runtime" />
-    <PackageReference Include="Microsoft.Bcl.HashCode" Condition="'$(TargetFramework)' == 'net472'" />
+    <PackageReference Include="Microsoft.Bcl.HashCode"
+                      Condition="'$(TargetFramework)' == 'net472'" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core"
+                      ExcludeAssets="Runtime" />
     <PackageReference Include="Mono.Cecil" />
     <PackageReference Include="NuGet.Frameworks" />
     <PackageReference Include="NuGet.Versioning" />
-    <PackageReference Include="System.Text.Json" Condition="'$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'netstandard2.0'" />
+    <PackageReference Include="System.Text.Json"
+                      Condition="'$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'netstandard2.0'" />
 
-    <PackageReference Include="Microsoft.IO.Redist" VersionOverride="6.1.0" Condition="'$(TargetFramework)' == 'net472'"/>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="build\*" Pack="true" PackagePath="build\" CopyToOutputDirectory="PreserveNewest" TargetPath="%(Filename)%(Extension)" />
-  </ItemGroup>
-  <ItemGroup>
-    <InternalsVisibleTo Include="AssemblyShader.UnitTests" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="README.md" />
+    <PackageReference Include="Microsoft.IO.Redist"
+                      VersionOverride="6.1.0"
+                      Condition="'$(TargetFramework)' == 'net472'"/>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">
@@ -43,18 +40,31 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
+    
+    <None Include="build\*"
+          Pack="true"
+          PackagePath="build\"
+          CopyToOutputDirectory="PreserveNewest"
+          TargetPath="%(Filename)%(Extension)" />
+
+    <None Include="README.md" />
+    
+    <InternalsVisibleTo Include="AssemblyShader.UnitTests" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Strings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <EmbeddedResource Update="Strings.resx"
+                      Generator="ResXFileCodeGenerator"
+                      LastGenOutput="Strings.Designer.cs" />
   </ItemGroup>
-  <Target Name="IncludeReferenceCopyLocalPathsInBuildOutputInPackage" BeforeTargets="_GetBuildOutputFilesWithTfm" DependsOnTargets="ResolveReferences;ResolvePackageDependenciesForBuild">
+  <Target Name="IncludeReferenceCopyLocalPathsInBuildOutputInPackage"
+          BeforeTargets="_GetBuildOutputFilesWithTfm"
+          DependsOnTargets="ResolveReferences;ResolvePackageDependenciesForBuild">
     <ItemGroup>
-      <BuildOutputInPackage Include="@(RuntimeCopyLocalItems-&gt;WithMetadataValue('AssetType', 'runtime'))" TargetPath="%(RuntimeCopyLocalItems.DestinationSubDirectory)%(Filename)%(Extension)" />
+      <BuildOutputInPackage Include="@(RuntimeCopyLocalItems-&gt;WithMetadataValue('AssetType', 'runtime'))"
+                            TargetPath="%(RuntimeCopyLocalItems.DestinationSubDirectory)%(Filename)%(Extension)" />
 
-      <BuildOutputInPackage Include="@(RuntimeCopyLocalItems-&gt;WithMetadataValue('CopyLocal', 'true'))" TargetPath="%(RuntimeCopyLocalItems.DestinationSubDirectory)%(Filename)%(Extension)" />
+      <BuildOutputInPackage Include="@(RuntimeCopyLocalItems-&gt;WithMetadataValue('CopyLocal', 'true'))"
+                            TargetPath="%(RuntimeCopyLocalItems.DestinationSubDirectory)%(Filename)%(Extension)" />
     </ItemGroup>
   </Target>
 </Project>
