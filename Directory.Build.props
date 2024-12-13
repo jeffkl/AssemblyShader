@@ -1,9 +1,12 @@
 <Project>
   <PropertyGroup>
+    <DefaultItemExcludes>*log</DefaultItemExcludes>
+    <Deterministic>true</Deterministic>
+    <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
     <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
     <LangVersion>latest</LangVersion>
+    <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
     <Nullable>enable</Nullable>
-    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
 </Project>

@@ -4,7 +4,6 @@
   "assemblyVersion": "1.0",
   "buildNumberOffset": -1,
   "publicReleaseRefSpec": [
-    "^refs/heads/main$",
     "^refs/tags/v\\d+\\.\\d+\\.\\d+"
   ],
   "cloudBuild": {
