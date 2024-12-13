@@ -24,12 +24,6 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install .NET SDK 8.x
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: |
-          8.x
-    
     - name: Install .NET SDK 9.x
       uses: actions/setup-dotnet@v4
       with:
