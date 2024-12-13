@@ -5,8 +5,6 @@
     <NoWarn>$(NoWarn);SA0001;SA1600</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
-    <PackageReference Include="File.TestLogger" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="MSBuild.ProjectCreation" />
     <PackageReference Include="NuGet.Frameworks" VersionOverride="6.12.1" />
