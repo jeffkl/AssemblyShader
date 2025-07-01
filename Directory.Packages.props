@@ -1,25 +1,25 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <MicrosoftBuildPackageVersion>17.13.9</MicrosoftBuildPackageVersion>
-    <NuGetPackageVersion>6.13.2</NuGetPackageVersion>
+    <MicrosoftBuildPackageVersion>17.14.8</MicrosoftBuildPackageVersion>
+    <NuGetPackageVersion>6.14.0</NuGetPackageVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
     <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildPackageVersion)" />
     <PackageVersion Include="Microsoft.IO.Redist" Version="6.1.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="MSBuild.ProjectCreation" Version="14.0.5" />
     <PackageVersion Include="Mono.Cecil" Version="0.11.6" />
     <PackageVersion Include="NuGet.Frameworks" Version="$(NuGetPackageVersion)" />
     <PackageVersion Include="NuGet.Versioning" Version="$(NuGetPackageVersion)" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="System.Text.Json" Version="9.0.3" />
+    <PackageVersion Include="System.Text.Json" Version="9.0.6" />
     <PackageVersion Include="xunit" Version="2.9.3" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
-    <GlobalPackageReference Include="Microsoft.Build.Artifacts" Version="6.1.48" />
+    <GlobalPackageReference Include="Microsoft.Build.Artifacts" Version="6.1.63" />
     <GlobalPackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <GlobalPackageReference Include="Nerdbank.GitVersioning" Version="3.7.115" />
     <GlobalPackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
