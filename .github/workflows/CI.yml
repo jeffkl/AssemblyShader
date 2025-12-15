@@ -66,7 +66,7 @@ jobs:
       run: dotnet test ${{ env.CommonTestArguments }} ${{ matrix.TestArguments}} --framework net9.0 "/Property:Platform=${{ env.BuildPlatform }};Configuration=${{ env.BuildConfiguration }}" "/BinaryLogger:${{ env.ArtifactsDirectoryName }}/test-net9.0.binlog"
       
     - name: Upload Test Results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       if: success() || failure()
       with:
         name: test-results-${{ matrix.name }}
@@ -74,7 +74,7 @@ jobs:
         if-no-files-found: error
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       if: success() || failure()
       with:
         name: ${{ env.ArtifactsDirectoryName }}-${{ matrix.name }}
